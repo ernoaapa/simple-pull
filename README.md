@@ -1,14 +1,21 @@
-Stouts.pull
+Simple Pull
 ===========
 
 [![Build Status](http://img.shields.io/travis/Stouts/Stouts.pull.svg?style=flat-square)](https://travis-ci.org/Stouts/Stouts.pull)
 [![Galaxy](http://img.shields.io/badge/galaxy-Stouts.pull-blue.svg?style=flat-square)](https://galaxy.ansible.com/list#/roles/908)
 
-Ansible role which manage [ansible-pull](http://docs.ansible.com/playbooks_intro.html#ansible-pull)
+Ansible role which do similar thing as [ansible-pull](http://docs.ansible.com/playbooks_intro.html#ansible-pull) but
+do it with simple `git clone` and `ansible-playbook` commands.
 
-The role allows you to setup easily automatic updates for your server with `ansible-pull`.
+Need for this was because `ansible-pull` doesn't support downloading playbook dependencies from Galaxy before running the playbook.
+This playbook might become unnecessary when `ansible-pull` support it.
 
-* Install and configure ansible-pull;
+Originally based on [Stouts.pull](https://github.com/Stouts/Stouts.pull). The playbook started to look so much different that decided
+to split it to own playbook.
+
+The role allows you to setup easily automatic updates for your server with `simple-pull`.
+
+* Install and configure simple-pull;
 * Setup SSH hosts and keys;
 * Follow repositories and run ansible playbooks;
 * Rotate logs;
@@ -18,6 +25,7 @@ The role allows you to setup easily automatic updates for your server with `ansi
 
 ```yaml
 pull_enabled: yes                       # The role is enabled
+pull_install_ansible: yes               # Should this playbook install Ansible
 
 pull_ansible_ppa: ppa:rquillo/ansible   # Ansible ppa repository
 
@@ -61,7 +69,7 @@ pull_mail_to: ""                        # Set to enable notifications about erro
 
 #### Usage
 
-Add `Stouts.pull` to your roles and set vars in your playbook file.
+Add `simple-pull` to your roles and set vars in your playbook file.
 
 Example:
 
@@ -70,7 +78,7 @@ Example:
 - hosts: all
 
   roles:
-  - Stouts.pull
+  - simple-pull
 
   vars:
     pull_user: vagrant
@@ -95,4 +103,4 @@ Licensed under the MIT License. See the LICENSE file for details.
 
 #### Feedback, bug-reports, requests, ...
 
-Are [welcome](https://github.com/Stouts/Stouts.pull/issues)!
+Are [welcome](https://github.com/ernoaapa/simple-pull/issues)!

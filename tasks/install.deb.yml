@@ -6,9 +6,11 @@
 
 - name: pull-install | Add ansible ppa
   apt_repository: repo={{pull_ansible_ppa}} update_cache=yes
+  when: pull_install_ansible
 
 - name: pull-install | Install ansible
   apt: pkg=ansible
+  when: pull_install_ansible
 
 - name: pull-install | Install mailutils
   apt: pkg=mailutils

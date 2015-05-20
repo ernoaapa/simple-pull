@@ -3,6 +3,14 @@
 - name: pull-configure | Ensure for the pull user exists
   user: name={{pull_user}} createhome=yes
 
+- name: pull-configure | Ensure pull user ssh directory
+  file: >
+    path="{{pull_user_ssh_home}}"
+    owner="{{pull_user}}"
+    group="{{pull_group}}"
+    mode=0700
+    state=directory
+
 - name: pull-configure | Setup fingerprints
   lineinfile: >
     line="{{item}}"
@@ -15,9 +23,19 @@
     mode="0644"
   with_items: pull_fingerprints
 
-- name: pull-configure | Copy private keys
+- name: pull-configure | Copy private key files
   copy: src={{item}} dest={{pull_user_ssh_home}}/{{item|basename}} owner={{pull_user}} group={{pull_group}} mode=0400
   with_items: pull_private_keys
+  when: pull_private_keys is defined
+
+- name: pull-configure | Add private key
+  copy:
+    content: "{{pull_private_key}}"
+    dest: "{{pull_user_ssh_home}}/simple-pull"
+    owner: "{{pull_user}}"
+    group: "{{pull_group}}"
+    mode: 0400
+  when: pull_private_key is defined
 
 - name: pull-configure | Create pull directories
   file: state=directory owner={{pull_user}} group={{pull_group}} path={{item}} recurse=yes
@@ -37,7 +55,7 @@
   template: src=pull.sh.j2 dest={{pull_workdir}}/pull.sh owner={{pull_user}} group={{pull_group}} mode=0755
 
 - name: pull-configure | Configure cron
-  template: src=cron.j2 dest=/etc/cron.d/ansible-pull owner=root group=root mode=0644
+  template: src=cron.j2 dest=/etc/cron.d/simple-pull owner=root group=root mode=0644
 
 - name: pull-configure | Configure logrotate
-  template: src=logrotate.j2 dest=/etc/logrotate.d/ansible-pull owner=root group=root mode=0644
+  template: src=logrotate.j2 dest=/etc/logrotate.d/simple-pull owner=root group=root mode=0644

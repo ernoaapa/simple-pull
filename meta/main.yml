@@ -3,9 +3,8 @@
 dependencies: []
 
 galaxy_info:
-  author: klen
-  company: Stouts
-  description: Manage ansible-pull
+  author: ernoaapa
+  description: Run Ansible with simple Git clone and ansible-playbook commands
   license: MIT
   platforms:
   - name: Ubuntu
