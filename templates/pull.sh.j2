@@ -42,7 +42,7 @@ do_simple_pull() {
     fi
 
     echo "SIMPLE PULL: install Galaxy requirements $galaxy_requirements" >> $logfile
-    ansible-galaxy install --role-file=$galaxy_requirements --ignore-errors >> $logfile 2>&1
+    ansible-galaxy install --role-file=$galaxy_requirements --force --ignore-errors >> $logfile 2>&1
 
     inventory="$prefix.ini"
     echo "SIMPLE PULL: Run playbook $playbook with $inventory inventory" >> $logfile
