@@ -46,7 +46,7 @@ do_simple_pull() {
 
     inventory="$prefix.ini"
     echo "SIMPLE PULL: Run playbook $playbook with $inventory inventory" >> $logfile
-    ansible-playbook -i $inventory $playbook >> $logfile 2>&1
+    ansible-playbook -i $inventory $playbook --extra-vars=$prefix.json >> $logfile 2>&1
 
     echo "SIMPLE PULL: Done! $(date)" >> $logfile
 
