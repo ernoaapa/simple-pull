@@ -9,6 +9,36 @@ do_sendmail() {
     echo -e "$1" | mail -s "[{{inventory_hostname}}]PULL" "{{ pull_mail_to|default(pull_mail_to) }}"
 }
 
+send_graphite_start() {
+    graphite_host=$1
+    commit=$2
+    if [ "$graphite_host" != "" ]; then
+      tags="ansible,provision,started"
+      what="Ansible - provision started"
+      timestamp=`date`
+      EVENT_DATA="Started at ${timestamp}. Git commit: ${commit}"
+
+      event="{\"what\": \"$what\", \"tags\": \"$tags\", \"data\": \"$EVENT_DATA\"}"
+
+      curl -X POST "$graphite_host/events/" -d "$event"
+    fi
+}
+
+send_graphite_end() {
+    graphite_host=$1
+    commit=$2
+    if [ "$graphite_host" != "" ]; then
+      tags="ansible,provision,ended"
+      what="Ansible - provision ended"
+      timestamp=`date`
+      EVENT_DATA="Ended at ${timestamp}. Git commit: ${commit}"
+
+      event="{\"what\": \"$what\", \"tags\": \"$tags\", \"data\": \"$EVENT_DATA\"}"
+
+      curl -X POST "$graphite_host/events/" -d "$event"
+    fi
+}
+
 do_simple_pull() {
     local prefix="$1"
     local repo="$2"
@@ -36,10 +66,15 @@ do_simple_pull() {
 
     cd $prefix
 
+    commit=`git rev-parse HEAD`
+    echo "SIMPLE PULL: Current commit: ${commit}" >> $logfile
+
     if [ ! -f $galaxy_requirements ]; then
       "SIMPLE PULL: No $galaxy_requirements file found!"
       exit 2
     fi
+
+    send_graphite_start "{{graphite_host}}" $commit >> $logfile
 
     echo "SIMPLE PULL: install Galaxy requirements $galaxy_requirements" >> $logfile
     ansible-galaxy install --role-file=$galaxy_requirements --force --ignore-errors >> $logfile 2>&1
@@ -51,7 +86,7 @@ do_simple_pull() {
     ansible-playbook -i $inventory $playbook --extra-vars=@$prefix.json >> $logfile 2>&1
     duration_ms=$((($(date +%s%N) - $start_time)/1000000));
 
-    `report_playbook_time $duration_ms`
+    send_graphite_end "{{graphite_host}}" $commit
 
     echo "SIMPLE PULL: Done! $(date)" >> $logfile
 

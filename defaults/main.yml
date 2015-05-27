@@ -41,3 +41,4 @@ pull_inventory:                         # Inventory hosts (each line will be add
 pull_verbose: v
 
 pull_mail_to: ""                        # Set to enable notifications about errors
+pull_graphite_host: ""                       # Graphite host to send events
