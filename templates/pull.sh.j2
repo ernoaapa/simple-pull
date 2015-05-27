@@ -20,7 +20,9 @@ send_graphite_start() {
 
       event="{\"what\": \"$what\", \"tags\": \"$tags\", \"data\": \"$EVENT_DATA\"}"
 
-      curl -X POST "$graphite_host/events/" -d "$event"
+      set +e #if it fails, ignore it
+      curl --silent --show-error --max-time 5 -X POST "$graphite_host/events/" -d "$event"
+      set -e
     fi
 }
 
@@ -35,7 +37,9 @@ send_graphite_end() {
 
       event="{\"what\": \"$what\", \"tags\": \"$tags\", \"data\": \"$EVENT_DATA\"}"
 
-      curl -X POST "$graphite_host/events/" -d "$event"
+      set +e #if it fails, ignore it
+      curl --silent --show-error --max-time 5 -X POST "$graphite_host/events/" -d "$event"
+      set -e
     fi
 }
 
