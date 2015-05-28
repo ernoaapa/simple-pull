@@ -41,4 +41,7 @@ pull_inventory:                         # Inventory hosts (each line will be add
 pull_verbose: v
 
 pull_mail_to: ""                        # Set to enable notifications about errors
-pull_graphite_host: ""                       # Graphite host to send events
+pull_graphite_host: ""                  # Graphite host to send events
+pull_graphite_tags:                     # Tags what to add into the Graphite event. Simple-pull will add extra "started"/"ended" and hostname tags to this list.
+  - ansible
+  - provision

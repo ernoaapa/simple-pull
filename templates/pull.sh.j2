@@ -13,7 +13,8 @@ send_graphite_start() {
     graphite_host=$1
     commit=$2
     if [ "$graphite_host" != "" ]; then
-      tags="ansible,provision,started"
+      hostname=`hostname`
+      tags="$hostname,{{pull_graphite_tags|join(',')}},started"
       what="Ansible - provision started"
       timestamp=`date`
       EVENT_DATA="Started at ${timestamp}. Git commit: ${commit}"
@@ -30,7 +31,8 @@ send_graphite_end() {
     graphite_host=$1
     commit=$2
     if [ "$graphite_host" != "" ]; then
-      tags="ansible,provision,ended"
+      hostname=`hostname`
+      tags="$hostname,{{pull_graphite_tags|join(',')}},ended"
       what="Ansible - provision ended"
       timestamp=`date`
       EVENT_DATA="Ended at ${timestamp}. Git commit: ${commit}"
