@@ -80,7 +80,7 @@ do_simple_pull() {
       exit 2
     fi
 
-    send_graphite_start "{{graphite_host}}" $commit >> $logfile 2>&1
+    send_graphite_start "{{pull_graphite_host}}" $commit >> $logfile 2>&1
 
     echo "SIMPLE PULL: install Galaxy requirements $galaxy_requirements" >> $logfile
     ansible-galaxy install --role-file=$galaxy_requirements --force --ignore-errors >> $logfile 2>&1
