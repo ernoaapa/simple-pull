@@ -92,7 +92,7 @@ do_simple_pull() {
     ansible-playbook -i $inventory $playbook --extra-vars=@$prefix.json >> $logfile 2>&1
     duration_ms=$((($(date +%s%N) - $start_time)/1000000));
 
-    send_graphite_end "{{graphite_host}}" $commit >> $logfile 2>&1
+    send_graphite_end "{{pull_graphite_host}}" $commit >> $logfile 2>&1
 
     echo "SIMPLE PULL: Done! $(date)" >> $logfile
 
