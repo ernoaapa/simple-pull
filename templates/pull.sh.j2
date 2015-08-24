@@ -65,9 +65,10 @@ do_simple_pull() {
       echo "SIMPLE PULL: Clone $repo:$version to $prefix" >> $logfile
       git clone -b $version $repo $prefix >> $logfile 2>&1
     else
-      echo "SIMPLE PULL: Pull Git repository at $prefix" >> $logfile
+      echo "SIMPLE PULL: Fetch Git repository at $prefix and checkout branch origin/$version" >> $logfile
       cd $prefix
-      git pull --rebase >> $logfile 2>&1
+      git fetch origin >> $logfile 2>&1
+      git reset --hard origin/$version >> $logfile 2>&1
     fi
 
     cd $prefix
