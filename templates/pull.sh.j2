@@ -65,10 +65,9 @@ do_simple_pull() {
       echo "SIMPLE PULL: Clone $repo:$version to $prefix" >> $logfile
       git clone -b $version $repo $prefix >> $logfile 2>&1
     else
-      echo "SIMPLE PULL: Fetch Git repository at $prefix and checkout branch origin/$version" >> $logfile
+      echo "SIMPLE PULL: Pull Git repository at $prefix" >> $logfile
       cd $prefix
-      git fetch origin >> $logfile 2>&1
-      git reset --hard origin/$version >> $logfile 2>&1
+      git pull --rebase >> $logfile 2>&1
     fi
 
     cd $prefix
@@ -92,7 +91,7 @@ do_simple_pull() {
     start_time=$(date +%s%N);
     ansible-playbook -i $inventory $playbook --extra-vars=@$prefix.json >> $logfile 2>&1
     duration_ms=$((($(date +%s%N) - $start_time)/1000000));
-    echo "Completed playbook in $duration_ms ms" >> $logfile
+
     send_graphite_end "{{pull_graphite_host}}" $commit >> $logfile 2>&1
 
     echo "SIMPLE PULL: Done! $(date)" >> $logfile
