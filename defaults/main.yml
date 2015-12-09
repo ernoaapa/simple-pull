@@ -18,7 +18,7 @@ pull_fingerprints:
 
 pull_private_keys: []                   # The keys will be copied to server
 pull_schedule: '*/15 * * * *'           # Schedule crontab
-
+pull_timeout: 10m                       # What is the timeout of the ansible run
 pull_sources: []                        # Define your sources to control
                                         # Ex: pull_sources:
                                         #     - name: myproject
